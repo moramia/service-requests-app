@@ -1,7 +1,12 @@
+import { useDispatch } from "react-redux";
+import { removeRequest, updateStatus } from "../../actions/requestActions";
+import { STATUS_LABELS } from "../../constants/statusMap"
 import { Link } from "react-router-dom";
 import "./RequestDetails.css";
 
-function RequestDetails({ request }) {
+function RequestDetails({ request, role = 'master' }) {
+  const dispatch = useDispatch();
+
   return (
     <section className="request-details">
     <Link to="/requests">← Назад к заявкам</Link>
@@ -19,23 +24,14 @@ function RequestDetails({ request }) {
       </p>
 
       <p className="request-details__status">
-        Статус: {request.status}
+        Статус: {STATUS_LABELS[request.status]}
       </p>
 
-      {request.image ? (
-        <img
-          src={request.image}
-          alt="Фото проблемы"
-          className="request-details__image"
-        />
-      ) :
-      (
-        <img
-          src='/problem.jpg'
-          alt="Фото проблемы"
-          className="request-details__image"
-        />
-      )}
+      <img
+        src={request.image || '/problem.jpg'}
+        alt="Фото проблемы"
+        className="request-details__image"
+      />
 
       {request.masterComment && (
         <div className="request-details__comment">
@@ -43,8 +39,32 @@ function RequestDetails({ request }) {
           <p>{request.masterComment}</p>
         </div>
       )}
+
+      {role === "client" && (
+        <button
+          onClick={() => dispatch(removeRequest(request.id))}
+        >
+          Удалить заявку
+        </button>
+      )}
+
+      {role === "master" && (
+        <>
+          <select
+            value={request.status}
+            onChange={(e) =>
+              dispatch(updateStatus(request.id, e.target.value))
+            }
+          >
+            <option value="submitted">Подано</option>
+            <option value="in-progress">В обработке</option>
+            <option value="rejected">Отклонено</option>
+            <option value="done">Исполнено</option>
+          </select>
+        </>
+      )}
     </section>
   );
-}
+};
 
 export default RequestDetails;

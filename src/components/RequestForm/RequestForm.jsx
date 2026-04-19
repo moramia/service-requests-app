@@ -1,21 +1,32 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addRequest } from "../../actions/requestActions";
 import "./RequestForm.css";
 
-function RequestForm({ onSubmit }) {
+function RequestForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
 
+  const dispatch = useDispatch();
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    onSubmit({
+    if (!title.trim() || !description.trim() || !location.trim()) {
+      return;
+    }
+
+    const newRequest = {
+      id: Date.now(),
       title,
       description,
       location,
-    });
+      status: "submitted",
+    };
 
-    // очистка формы
+    dispatch(addRequest(newRequest));
+
     setTitle("");
     setDescription("");
     setLocation("");

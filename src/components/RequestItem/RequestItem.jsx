@@ -1,11 +1,5 @@
-import './RequestItem.css';
-
-const statusClassMap = {
-  "подано": "submitted",
-  "в обработке": "in-progress",
-  "отклонено": "rejected",
-  "исполнено": "done"
-};
+import "./RequestItem.css";
+import { STATUS_LABELS } from "../../constants/statusMap"
 
 const RequestItem = ({
   id,
@@ -24,8 +18,8 @@ const RequestItem = ({
         <h3 className="request__title">{title}</h3>
         <span className="request__location">{location}</span>
         <p className="request__description">{description}</p>
-        <span className={`request__status request__status--${statusClassMap[status]}`}>
-          {status}
+        <span className={`request__status request__status--${status}`}>
+          {STATUS_LABELS[status]}
         </span>
       </div>
     </div>

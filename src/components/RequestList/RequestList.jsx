@@ -1,30 +1,17 @@
 import "./RequestList.css";
 import RequestItem from "../RequestItem/RequestItem";
+import { useSelector } from "react-redux";
 
-const requestsData = [
-  {
-    id: 1,
-    title: "Не работает розетка",
-    description: "Розетка искрит и не подаёт питание",
-    location: "Комната 214",
-    status: "подано",
-  },
-  {
-    id: 2,
-    title: "Поломка кондиционера",
-    description: "Кондиционер не включается",
-    location: "Комната 505",
-    status: "в обработке",
-  },
-];
 
 function RequestList({ title, onOpenDetails }) {
+  const requests = useSelector((state) => state.requests);
+
   return (
     <section className="requests">
       <h2 className="requests__title">{title}</h2>
 
       <ul className="requests__list">
-        {requestsData.map((request) => (
+        {requests.map((request) => (
           <li key={request.id} className="requests__item">
             <RequestItem
               id={request.id}
@@ -39,6 +26,6 @@ function RequestList({ title, onOpenDetails }) {
       </ul>
     </section>
   );
-}
+};
 
 export default RequestList;
