@@ -1,0 +1,36 @@
+.navigation {
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  margin: 1rem auto 0;
+  padding: 0 1rem;
+  list-style: none;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.navigation__link {
+  margin: 0;
+  padding: 0.875rem 1.25rem;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #666666;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.navigation__link:hover {
+  color: #333333;
+}
+
+.navigation__link--active {
+  color: #1976d2;
+  border-bottom-color: #1976d2;
+}
+
+.navigation__link--active:hover {
+  color: #1565c0;
+}
+

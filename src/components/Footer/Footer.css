@@ -1,0 +1,54 @@
+.footer {
+  margin-top: auto;
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  padding: 2rem 0;
+}
+
+.footer__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.footer__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.footer__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #333333;
+}
+
+.footer__address {
+  margin: 0;
+  font-style: normal;
+  font-size: 0.9375rem;
+  color: #666666;
+  line-height: 1.5;
+}
+
+.footer__phone {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: color 0.2s ease;
+}
+
+.footer__phone:hover {
+  color: #1565c0;
+  text-decoration: underline;
+}
+
+.footer__phone:focus {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
