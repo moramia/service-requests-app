@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 
 function RequestList({ title, onOpenDetails }) {
-  const requests = useSelector((state) => state.requests);
+  const requests = useSelector((state) => state.requests.requests);
 
   return (
     <section className="requests">

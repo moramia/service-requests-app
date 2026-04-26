@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 function RequestDetailsPage() {
   const { id } = useParams();
-  const requests = useSelector((state) => state.requests);
+  const requests = useSelector((state) => state.requests.requests);
   const request = requests.find(
     (item) => item.id === Number(id)
   );

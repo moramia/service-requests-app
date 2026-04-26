@@ -1,11 +1,15 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeRequest, updateStatus } from "../../actions/requestActions";
 import { STATUS_LABELS } from "../../constants/statusMap"
 import { Link } from "react-router-dom";
 import "./RequestDetails.css";
 
-function RequestDetails({ request, role = 'master' }) {
+function RequestDetails({ request }) {
   const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+
+  const isClient = user?.roles.includes("client");
+  const isMaster = user?.roles.includes("master");
 
   return (
     <section className="request-details">
@@ -40,7 +44,7 @@ function RequestDetails({ request, role = 'master' }) {
         </div>
       )}
 
-      {role === "client" && (
+      {isClient && (
         <button
           onClick={() => dispatch(removeRequest(request.id))}
         >
@@ -48,7 +52,7 @@ function RequestDetails({ request, role = 'master' }) {
         </button>
       )}
 
-      {role === "master" && (
+      {isMaster && (
         <>
           <select
             value={request.status}

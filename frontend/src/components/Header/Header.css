@@ -25,3 +25,17 @@
   color: #333333;
 }
 
+.header_logout {
+  margin-left: auto;
+  margin-right: 1rem;
+  padding: 6px 12px;
+  border: none;
+  background-color: #cb3025;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.header_logout:hover {
+  background-color: #621313;
+}
