@@ -1,5 +1,7 @@
 .request__card {
   display: flex;
+  align-items: flex-start;
+  gap: 1rem;
   padding: 1.25rem;
 
   background-color: #ffffff;
@@ -16,6 +18,18 @@
 
 .request__card:active {
   transform: translateY(1px);
+}
+
+.request__card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.request__card-actions button,
+.request__card-actions select {
+  cursor: pointer;
 }
 
 .request__info {

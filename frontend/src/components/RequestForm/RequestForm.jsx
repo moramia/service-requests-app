@@ -1,35 +1,47 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addRequest } from "../../actions/requestActions";
+import { useEffect, useRef, useState } from "react";
+import { createRequest } from "../../api/api";
 import "./RequestForm.css";
 
-function RequestForm() {
+function RequestForm({ onCreated }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const fileInputRef = useRef(null);
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!imageFile) {
+      setImagePreviewUrl("");
+      return undefined;
+    }
+    const url = URL.createObjectURL(imageFile);
+    setImagePreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [imageFile]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!title.trim() || !description.trim() || !location.trim()) {
       return;
     }
 
-    const newRequest = {
-      id: Date.now(),
-      title,
-      description,
-      location,
-      status: "submitted",
-    };
-
-    dispatch(addRequest(newRequest));
-
-    setTitle("");
-    setDescription("");
-    setLocation("");
+    try {
+      await createRequest({
+        title,
+        description,
+        location,
+        userId: "test-user",
+        imageFile: imageFile || undefined,
+      });
+      setTitle("");
+      setDescription("");
+      setLocation("");
+      setImageFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      onCreated?.();
+    } catch {}
   };
 
   return (
@@ -64,6 +76,25 @@ function RequestForm() {
             required
           />
         </label>
+
+        <label className="request-form__field">
+          Фото проблемы (необязательно)
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="request-form__file"
+            onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+          />
+        </label>
+
+        {imagePreviewUrl ? (
+          <img
+            src={imagePreviewUrl}
+            alt="Предпросмотр"
+            className="request-form__preview"
+          />
+        ) : null}
 
         <button type="submit" className="request-form__submit">
           Отправить

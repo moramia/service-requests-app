@@ -7,6 +7,7 @@ import RequestsPage from "./pages/RequestsPage";
 import NotFound404 from "./pages/NotFound404";
 import CreateRequestPage from "./pages/CreateRequestPage";
 import RequestDetailsPage from "./pages/RequestDetailsPage";
+import ArchivePage from "./pages/ArchivePage";
 import LoginPage from "./pages/LoginPage";
 
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -45,6 +46,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <RequestDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/archive"
+            element={
+              <ProtectedRoute>
+                <ArchivePage />
               </ProtectedRoute>
             }
           />

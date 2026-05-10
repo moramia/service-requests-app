@@ -1,19 +1,30 @@
-import { useDispatch, useSelector } from "react-redux";
-import { removeRequest, updateStatus } from "../../actions/requestActions";
-import { STATUS_LABELS } from "../../constants/statusMap"
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { STATUS_LABELS } from "../../constants/statusMap";
+import { deleteRequest, updateRequestStatus } from "../../api/api";
+import { requestImageSrc } from "../../utils/requestImageSrc";
 import "./RequestDetails.css";
 
-function RequestDetails({ request }) {
-  const dispatch = useDispatch();
-  const user = useSelector(state => state.auth.user);
+function RequestDetails({ request, setRequest, onDeleted }) {
+  const user = useSelector((state) => state.auth.user);
 
   const isClient = user?.roles.includes("client");
   const isMaster = user?.roles.includes("master");
 
+  const handleDelete = async () => {
+    await deleteRequest(request._id);
+    onDeleted?.();
+  };
+
+  const handleStatusChange = async (e) => {
+    const status = e.target.value;
+    const { data } = await updateRequestStatus(request._id, status);
+    setRequest(data);
+  };
+
   return (
     <section className="request-details">
-    <Link to="/requests">← Назад к заявкам</Link>
+      <Link to="/requests">← Назад к заявкам</Link>
 
       <h2 className="request-details__title">
         {request.title}
@@ -32,7 +43,7 @@ function RequestDetails({ request }) {
       </p>
 
       <img
-        src={request.image || '/problem.jpg'}
+        src={requestImageSrc(request.image)}
         alt="Фото проблемы"
         className="request-details__image"
       />
@@ -45,30 +56,22 @@ function RequestDetails({ request }) {
       )}
 
       {isClient && (
-        <button
-          onClick={() => dispatch(removeRequest(request.id))}
-        >
+        <button type="button" onClick={handleDelete}>
           Удалить заявку
         </button>
       )}
 
       {isMaster && (
-        <>
-          <select
-            value={request.status}
-            onChange={(e) =>
-              dispatch(updateStatus(request.id, e.target.value))
-            }
-          >
-            <option value="submitted">Подано</option>
-            <option value="in-progress">В обработке</option>
-            <option value="rejected">Отклонено</option>
-            <option value="done">Исполнено</option>
-          </select>
-        </>
+        <select value={request.status} onChange={handleStatusChange}>
+          {Object.entries(STATUS_LABELS).map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
       )}
     </section>
   );
-};
+}
 
 export default RequestDetails;

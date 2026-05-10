@@ -1,23 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { getRequests } from "../api/api";
 import RequestList from "../components/RequestList/RequestList";
 
-function RequestsPage() {
+function ArchivePage() {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
-  const isMaster = user?.roles.includes("master");
-  const pageTitle = isMaster ? "Все заявки" : "Мои заявки";
-
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const loadRequests = useCallback(async () => {
     try {
       const { data } = await getRequests();
-      const activeRequests = data.filter((request) => request.status !== "done");
-      setRequests(activeRequests);
+      const doneOnly = data.filter((request) => request.status === "done");
+      setRequests(doneOnly);
     } catch {
       setRequests([]);
     } finally {
@@ -39,7 +34,7 @@ function RequestsPage() {
         <p>Загрузка…</p>
       ) : (
         <RequestList
-          title={pageTitle}
+          title="Архив заявок"
           requests={requests}
           onOpenDetails={handleOpenDetails}
           onRefresh={loadRequests}
@@ -49,4 +44,4 @@ function RequestsPage() {
   );
 }
 
-export default RequestsPage;
+export default ArchivePage;
