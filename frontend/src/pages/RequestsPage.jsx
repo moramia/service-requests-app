@@ -7,7 +7,7 @@ import RequestList from "../components/RequestList/RequestList";
 function RequestsPage() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
-  const isMaster = user?.roles.includes("master");
+  const isMaster = user?.role === "master";
   const pageTitle = isMaster ? "Все заявки" : "Мои заявки";
 
   const [requests, setRequests] = useState([]);

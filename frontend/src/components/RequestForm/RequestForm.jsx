@@ -32,7 +32,6 @@ function RequestForm({ onCreated }) {
         title,
         description,
         location,
-        userId: "test-user",
         imageFile: imageFile || undefined,
       });
       setTitle("");

@@ -1,4 +1,4 @@
-export const isAuthenticated = (user) => !!user;
+export const isAuthenticated = (user, token) => !!(user && token);
 
 export const hasRole = (user, roles) =>
-  roles.some(role => user.roles.includes(role));
+  !!(user?.role && roles.some((role) => user.role === role));

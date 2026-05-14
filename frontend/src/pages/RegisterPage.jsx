@@ -2,16 +2,18 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import { login } from "../actions/authActions";
-import { loginUser } from "../api/api";
+import { registerUser } from "../api/api";
 import "./LoginPage.css";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("client");
   const [error, setError] = useState("");
 
   if (user && token) {
@@ -22,12 +24,18 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     try {
-      const { data } = await loginUser({ email, password });
+      const { data } = await registerUser({
+        name: name.trim(),
+        email,
+        password,
+        role,
+      });
       dispatch(login({ user: data.user, token: data.token }));
       navigate("/requests");
     } catch (err) {
       const message =
-        err?.response?.data?.message ?? "Не удалось войти. Проверьте данные.";
+        err?.response?.data?.message ??
+        "Не удалось зарегистрироваться. Попробуйте снова.";
       setError(message);
     }
   };
@@ -35,7 +43,7 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <div className="login-page__container">
-        <h2 className="login-page__title">Вход в систему</h2>
+        <h2 className="login-page__title">Регистрация</h2>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           {error ? (
@@ -43,6 +51,17 @@ export default function LoginPage() {
               {error}
             </p>
           ) : null}
+
+          <label className="auth-form__field">
+            Имя
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              autoComplete="name"
+            />
+          </label>
 
           <label className="auth-form__field">
             Email
@@ -62,18 +81,31 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              autoComplete="current-password"
+              minLength={6}
+              autoComplete="new-password"
             />
           </label>
 
-          <button type="submit" className="login-page__button login-page__button--client">
-            Войти
+          <label className="auth-form__field">
+            Роль
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+            >
+              <option value="client">Клиент</option>
+              <option value="master">Мастер</option>
+            </select>
+          </label>
+
+          <button type="submit" className="login-page__button login-page__button--master">
+            Зарегистрироваться
           </button>
 
           <p className="auth-form__footnote">
-            Нет аккаунта?{" "}
-            <NavLink to="/register" className="auth-form__link">
-              Регистрация
+            Уже есть аккаунт?{" "}
+            <NavLink to="/login" className="auth-form__link">
+              Вход
             </NavLink>
           </p>
         </form>

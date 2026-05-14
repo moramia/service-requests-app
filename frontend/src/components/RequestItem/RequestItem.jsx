@@ -2,11 +2,13 @@ import { useSelector } from "react-redux";
 import "./RequestItem.css";
 import { STATUS_LABELS } from "../../constants/statusMap";
 import { deleteRequest, updateRequestStatus } from "../../api/api";
+import { isRequestOwner } from "../../utils/requestOwner";
 
 const RequestItem = ({ request, onOpenDetails, onRefresh }) => {
   const user = useSelector((state) => state.auth.user);
-  const isClient = user?.roles.includes("client");
-  const isMaster = user?.roles.includes("master");
+  const isClient = user?.role === "client";
+  const isMaster = user?.role === "master";
+  const isOwner = user?.id ? isRequestOwner(request, user.id) : false;
 
   const handleDelete = async (e) => {
     e.stopPropagation();
@@ -35,13 +37,13 @@ const RequestItem = ({ request, onOpenDetails, onRefresh }) => {
         </span>
       </div>
 
-      {(isClient || isMaster) && (
+      {(isOwner || isMaster) && (
         <div className="request__card-actions" onClick={(e) => e.stopPropagation()}>
-          {isClient && (
+          {isClient && isOwner ? (
             <button type="button" onClick={handleDelete}>
               Удалить
             </button>
-          )}
+          ) : null}
           {isMaster && (
             <select value={request.status} onChange={handleStatusChange}>
               {Object.entries(STATUS_LABELS).map(([value, label]) => (

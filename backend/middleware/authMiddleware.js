@@ -1,0 +1,23 @@
+const jwt = require("jsonwebtoken");
+
+function authMiddleware(req, res, next) {
+  const header = req.headers.authorization;
+  const token =
+    typeof header === "string" && header.startsWith("Bearer ")
+      ? header.slice(7)
+      : null;
+
+  if (!token) {
+    return res.status(401).json({ message: "Не авторизован" });
+  }
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: payload.id, role: payload.role };
+    next();
+  } catch {
+    return res.status(401).json({ message: "Недействительный токен" });
+  }
+}
+
+module.exports = authMiddleware;

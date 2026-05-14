@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 import { STATUS_LABELS } from "../../constants/statusMap";
 import { deleteRequest, updateRequestStatus } from "../../api/api";
 import { requestImageSrc } from "../../utils/requestImageSrc";
+import { isRequestOwner } from "../../utils/requestOwner";
 import "./RequestDetails.css";
 
 function RequestDetails({ request, setRequest, onDeleted }) {
   const user = useSelector((state) => state.auth.user);
 
-  const isClient = user?.roles.includes("client");
-  const isMaster = user?.roles.includes("master");
+  const isClient = user?.role === "client";
+  const isMaster = user?.role === "master";
+  const isOwner = user?.id ? isRequestOwner(request, user.id) : false;
 
   const handleDelete = async () => {
     await deleteRequest(request._id);
@@ -55,11 +57,11 @@ function RequestDetails({ request, setRequest, onDeleted }) {
         </div>
       )}
 
-      {isClient && (
+      {isClient && isOwner ? (
         <button type="button" onClick={handleDelete}>
           Удалить заявку
         </button>
-      )}
+      ) : null}
 
       {isMaster && (
         <select value={request.status} onChange={handleStatusChange}>

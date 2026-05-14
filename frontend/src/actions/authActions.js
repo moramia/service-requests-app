@@ -1,8 +1,17 @@
-export const login = (user) => ({
-  type: "LOGIN",
-  payload: user,
-});
+import {
+  savePersistedAuth,
+  clearPersistedAuth,
+} from "../utils/authStorage";
 
-export const logout = () => ({
-  type: "LOGOUT",
-});
+export const login = ({ user, token }) => {
+  savePersistedAuth({ user, token });
+  return {
+    type: "LOGIN",
+    payload: { user, token },
+  };
+};
+
+export const logout = () => {
+  clearPersistedAuth();
+  return { type: "LOGOUT" };
+};

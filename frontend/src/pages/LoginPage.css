@@ -40,12 +40,12 @@
 }
 
 .login-page__button--client {
-  background-color: #4caf50;
+  background-color: #2196f3;
   color: white;
 }
 
 .login-page__button--client:hover {
-  background-color: #43a047;
+  background-color: #1e88e5;
 }
 
 .login-page__button--master {
@@ -55,4 +55,47 @@
 
 .login-page__button--master:hover {
   background-color: #1e88e5;
+}
+
+.auth-form {
+  text-align: left;
+}
+
+.auth-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #424242;
+}
+
+.auth-form__field input,
+.auth-form__field select {
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.auth-form__error {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  color: #c62828;
+  background-color: #ffebee;
+  border-radius: 8px;
+}
+
+.auth-form__footnote {
+  margin: 1rem 0 0;
+  font-size: 0.8125rem;
+  color: #666;
+  text-align: center;
+}
+
+.auth-form__link {
+  color: #1976d2;
+  font-weight: 500;
 }
