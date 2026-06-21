@@ -1,8 +1,14 @@
 # Service Requests App
-
-## Деплой временно приостановлен по причине истечения беслпатного тарифного плана и будет возобновлён с 16.06
-### https://service-requests-app-production.up.railway.app/
 Веб-приложение для подачи и обработки заявок на обслуживание (MERN).
+
+## Деплой
+### https://service-requests-app-production.up.railway.app/
+Для входа в роли Мастер используйте:
+login: `master@test.com`
+password: `123456`
+В роли Клиент:
+login: `client@test.com`
+password: `123456`
 
 ## Возможности
 
