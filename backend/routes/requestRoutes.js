@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const Request = require("../models/Request");
 const authMiddleware = require("../middleware/authMiddleware");
-
+const allowedStatuses = require("../constants/requestStatuses");
 function createRequestRouter(upload) {
   const router = express.Router();
 
@@ -49,7 +49,14 @@ function createRequestRouter(upload) {
 
   router.get("/:id", authMiddleware, async (req, res) => {
     try {
+      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({
+          message: "Некорректный идентификатор"
+        });
+      }
+  
       const request = await Request.findById(req.params.id);
+
       if (!request) {
         return res.status(404).json({ message: "Заявка не найдена" });
       }
@@ -76,10 +83,48 @@ function createRequestRouter(upload) {
       try {
         const { title, description, location } = req.body;
 
+        if (
+          typeof title !== "string" ||
+          typeof description !== "string" ||
+          typeof location !== "string"
+        ) {
+          return res.status(400).json({
+            message: "Неверные данные"
+          });
+        }
+
+        if (
+          !title.trim() ||
+          !description.trim() ||
+          !location.trim()
+        ) {
+          return res.status(400).json({
+            message: "Все поля обязательны"
+          });
+        }
+
+        if (title.length > 100) {
+          return res.status(400).json({
+            message: "Слишком длинный заголовок"
+          });
+        }
+
+        if (description.length > 2000) {
+          return res.status(400).json({
+            message: "Слишком длинное описание"
+          });
+        }
+
+        if (location.length > 100) {
+          return res.status(400).json({
+            message: "Слишком длинное название помещения"
+          });
+        }
+
         const payload = {
-          title,
-          description,
-          location,
+          title: title.trim(),
+          description: description.trim(),
+          location: location.trim(),
           userId: new mongoose.Types.ObjectId(req.user.id),
         };
 
@@ -98,7 +143,14 @@ function createRequestRouter(upload) {
 
   router.delete("/:id", authMiddleware, async (req, res) => {
     try {
+      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({
+          message: "Некорректный идентификатор"
+        });
+      }
+
       const request = await Request.findById(req.params.id);
+
       if (!request) {
         return res.status(404).json({ message: "Заявка не найдена" });
       }
@@ -106,7 +158,7 @@ function createRequestRouter(upload) {
       if (request.userId.toString() !== req.user.id) {
         return res.status(403).json({ message: "Удалять может только владелец" });
       }
-
+  
       await Request.findByIdAndDelete(req.params.id);
       res.json({ message: "Заявка удалена" });
     } catch {
@@ -116,9 +168,22 @@ function createRequestRouter(upload) {
 
   router.put("/:id", authMiddleware, requireMaster, async (req, res) => {
     try {
+      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({
+          message: "Некорректный идентификатор"
+        });
+      }
+
       const { status } = req.body;
+
       if (typeof status !== "string") {
         return res.status(400).json({ message: "Неверный статус" });
+      }
+
+      if (!allowedStatuses.includes(status)) {
+        return res.status(400).json({
+          message: "Недопустимый статус"
+        });
       }
 
       const updated = await Request.findByIdAndUpdate(

@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const router = express.Router();
 
 function signToken(user) {
@@ -36,6 +38,27 @@ router.post("/register", async (req, res) => {
       typeof password !== "string"
     ) {
       return res.status(400).json({ message: "Неверные данные" });
+    }
+    if (
+      !name.trim() ||
+      !email.trim() ||
+      !password.trim()
+    ) {
+      return res.status(400).json({
+        message: "Все поля обязательны"
+      });
+    }
+
+    if (!emailRegex.test(email.trim())) {
+      return res.status(400).json({
+        message: "Некорректный email"
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "Пароль слишком короткий"
+      });
     }
 
     const existing = await User.findOne({ email: email.toLowerCase() });
