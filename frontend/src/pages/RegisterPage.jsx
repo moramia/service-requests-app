@@ -13,7 +13,6 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("client");
   const [error, setError] = useState("");
 
   if (user && token) {
@@ -28,7 +27,6 @@ export default function RegisterPage() {
         name: name.trim(),
         email,
         password,
-        role,
       });
       dispatch(login({ user: data.user, token: data.token }));
       navigate("/requests");
@@ -84,18 +82,6 @@ export default function RegisterPage() {
               minLength={6}
               autoComplete="new-password"
             />
-          </label>
-
-          <label className="auth-form__field">
-            Роль
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              required
-            >
-              <option value="client">Клиент</option>
-              <option value="master">Мастер</option>
-            </select>
           </label>
 
           <button type="submit" className="login-page__button login-page__button--master">

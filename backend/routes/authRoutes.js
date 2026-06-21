@@ -7,8 +7,14 @@ const router = express.Router();
 
 function signToken(user) {
   return jwt.sign(
-    { id: user._id.toString(), role: user.role },
-    process.env.JWT_SECRET
+    {
+      id: user._id.toString(),
+      role: user.role
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
   );
 }
 
@@ -23,7 +29,7 @@ function stripUser(doc) {
 
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
     if (
       typeof name !== "string" ||
       typeof email !== "string" ||
@@ -31,10 +37,6 @@ router.post("/register", async (req, res) => {
     ) {
       return res.status(400).json({ message: "Неверные данные" });
     }
-
-    const allowedRoles = ["client", "master"];
-    const nextRole =
-      typeof role === "string" && allowedRoles.includes(role) ? role : "client";
 
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) {
@@ -46,7 +48,7 @@ router.post("/register", async (req, res) => {
       name: name.trim(),
       email: email.toLowerCase().trim(),
       password: hash,
-      role: nextRole,
+      role: "client",
     });
 
     const token = signToken(user);
