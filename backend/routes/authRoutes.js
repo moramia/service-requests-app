@@ -49,17 +49,41 @@ router.post("/register", async (req, res) => {
       });
     }
 
+    if (name.trim().length < 2) {
+      return res.status(400).json({
+        message: "Слишком короткое имя"
+      });
+    }
+
+    if (name.trim().length > 200) {
+      return res.status(400).json({
+        message: "Слишком длинное имя"
+      });
+    }
+
+    if (email.trim().length > 200) {
+      return res.status(400).json({
+        message: "Слишком длинный email"
+      });
+    }
+
     if (!emailRegex.test(email.trim())) {
       return res.status(400).json({
         message: "Некорректный email"
       });
     }
 
-    if (password.length < 6) {
+    if (password.trim().length < 6) {
       return res.status(400).json({
-        message: "Пароль слишком короткий"
+        message: "Слишком короткий пароль"
       });
     }
+
+    if (password.trim().length > 200) {
+      return res.status(400).json({
+        message: "Слишком длинный пароль"
+      });
+    }    
 
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) {
