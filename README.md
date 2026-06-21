@@ -3,11 +3,12 @@
 
 ## Деплой
 ### https://service-requests-app-production.up.railway.app/
-Для входа в роли Мастер используйте:
-login: `master@test.com`
+Для входа в роли Мастер используйте:\
+login: `master@test.com`\
 password: `123456`
-В роли Клиент:
-login: `client@test.com`
+
+В роли Клиент:\
+login: `client@test.com`\
 password: `123456`
 
 ## Возможности
@@ -20,8 +21,8 @@ password: `123456`
 
 ## Стек
 
-Frontend: React, React Router, Redux, Axios
-Backend: Node.js, Express, Mongoose, Multer
+Frontend: React, React Router, Redux, Axios\
+Backend: Node.js, Express, Mongoose, Multer\
 БД: MongoDB Atlas
 
 ## Структура
