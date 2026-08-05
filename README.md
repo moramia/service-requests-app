@@ -2,6 +2,7 @@
 Веб-приложение для подачи и обработки заявок на обслуживание (MERN).
 
 ## Деплой
+## ОТКЛЮЧЁН
 ### https://service-requests-app-production.up.railway.app/
 Для входа в роли Мастер используйте:\
 login: `master@test.com`\
